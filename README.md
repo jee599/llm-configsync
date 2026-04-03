@@ -64,7 +64,7 @@ clisync save
     .codex/rules/default.rules (1.2KB)
 
   Total: 9 files, 10.4KB
-  Settings 4 | Hooks 1 | Skills 1 | Instructions 3
+  Settings 5 | Hooks 1 | Skills 1 | Instructions 2
 ```
 
 ## What Gets Synced
