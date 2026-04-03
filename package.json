@@ -1,15 +1,44 @@
 {
   "name": "clisync",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "Sync Claude Code, Gemini CLI, Codex, Aider settings across machines via GitHub Gist. One command save, one command load. Zero dependencies.",
-  "keywords": ["llm", "cli", "sync", "config", "backup", "restore", "claude-code", "gemini-cli", "codex", "aider", "continue", "copilot", "mcp", "dotfiles", "migrate"],
+  "keywords": [
+    "llm",
+    "cli",
+    "sync",
+    "config",
+    "backup",
+    "restore",
+    "claude-code",
+    "gemini-cli",
+    "codex",
+    "aider",
+    "continue",
+    "copilot",
+    "mcp",
+    "dotfiles",
+    "migrate"
+  ],
   "license": "MIT",
   "author": "jee599",
   "homepage": "https://github.com/jee599/clisync",
-  "bugs": { "url": "https://github.com/jee599/clisync/issues" },
-  "repository": { "type": "git", "url": "git+https://github.com/jee599/clisync.git" },
-  "bin": { "clisync": "bin/cli.js" },
+  "bugs": {
+    "url": "https://github.com/jee599/clisync/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jee599/clisync.git"
+  },
+  "bin": {
+    "clisync": "bin/cli.js"
+  },
   "type": "module",
-  "engines": { "node": ">=18" },
-  "files": ["bin/", "src/", "README.md"]
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md"
+  ]
 }
