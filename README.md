@@ -47,36 +47,33 @@ lcs load     # done — all configs restored
 ```
 lcs save
 
-  ✓ Claude Code — 22 files, 210.5KB
+  ✓ Claude Code — 5 files, 8.2KB
     .claude/settings.json (1.5KB)
-    .claude/keybindings.json (320B)
     .claude/CLAUDE.md (3.1KB)
     .claude/hooks/contextzip-rewrite.sh (1.5KB)
-    .claude/skills/auto-publish/SKILL.md (12.0KB)
-    .claude/plugins/installed_plugins.json (3.5KB)
-    .claude/teams/default/inboxes/team-lead.json (9.7KB)
-    ...
-  ✓ Gemini CLI — 3 files, 348B
+    .claude/skills/github-readme/SKILL.md (1.8KB)
+    .claude/plugins/installed_plugins.json (348B)
+  ✓ Gemini CLI — 2 files, 348B
     .gemini/settings.json (82B)
     .gemini/projects.json (266B)
   ✓ OpenAI Codex — 2 files, 1.8KB
     .codex/config.toml (612B)
     .codex/rules/default.rules (1.2KB)
 
-  Total: 27 files, 212.7KB
-  Settings 10 | Hooks 3 | Skills 12 | Instructions 2
+  Total: 9 files, 10.4KB
+  Settings 4 | MCP 0 | Hooks 1 | Skills 1 | Instructions 3
 ```
 
 ## What Gets Synced
 
-| Tool | Settings | Hooks | Skills | Instructions | Plugins/Teams |
-|:---|:---:|:---:|:---:|:---:|:---:|
-| **Claude Code** | `settings.json` `keybindings.json` | `hooks/` | `skills/` | `CLAUDE.md` | `plugins/*.json` `teams/` |
-| **Gemini CLI** | `settings.json` `projects.json` | | | | MCP `antigravity/mcp_config.json` |
-| **OpenAI Codex** | `config.toml` | | | `instructions.md` `rules/` | |
-| **Aider** | `.aider.conf.yml` `.aider.model.settings.yml` `.aider.models.json` | | | | |
-| **Continue** | `.continuerc.json` `config.yaml` `config.ts` `.continueignore` | | | | |
-| **Copilot CLI** | `settings.json` | | | | |
+| Tool | Files synced |
+|:---|:---|
+| **Claude Code** | `settings.json`, `keybindings.json`, `CLAUDE.md`, `hooks/`, `skills/`, `plugins/installed_plugins.json`, `plugins/known_marketplaces.json`, `plugins/blocklist.json`, `teams/` |
+| **Gemini CLI** | `settings.json`, `projects.json`, `antigravity/mcp_config.json` |
+| **OpenAI Codex** | `config.toml`, `instructions.md`, `rules/` |
+| **Aider** | `.aider.conf.yml`, `.aider.model.settings.yml`, `.aider.models.json` |
+| **Continue** | `.continue/.continuerc.json`, `.continue/config.yaml`, `.continue/config.ts`, `.continue/.continueignore` |
+| **Copilot CLI** | `.config/github-copilot/settings.json` |
 
 ## Commands
 
@@ -95,7 +92,7 @@ lcs save
 
 ## Safety
 
-- **30+ API key patterns auto-redacted** — OpenAI, Anthropic, Google, AWS, GitHub, GitLab, HuggingFace, Slack, Replicate, Vercel, Supabase, and generic key-value patterns
+- **17 API key patterns auto-redacted** — OpenAI, Anthropic, Google, AWS, GitHub, GitLab, HuggingFace, Slack, Replicate, Vercel, Supabase, and generic key-value patterns
 - **Sensitive files auto-skipped** — `auth.json`, `credentials.json`, `.env`, `.pem`, `.key` files are never uploaded
 - **Private Gist** — only you can see it
 - **Backups** — existing files saved as `.bak` before overwriting
@@ -104,7 +101,10 @@ lcs save
 - **Token security** — hidden input on entry, file permissions set to owner-only (0600)
 - **Cross-platform** — works on macOS, Linux, and Windows with consistent path handling
 - **Zero dependencies** — Node.js 18+ built-in modules only
-- **Bilingual** — auto-detects system language (English/Korean), override with `--lang=en` or `--ko`
+
+## Language
+
+Auto-detects system locale (English/Korean). Override with `--lang=en` or `--ko`.
 
 ## How It Works
 

@@ -166,10 +166,12 @@ const messages = {
 function detectLang() {
   const env = process.env.LCS_LANG || process.env.LANG || process.env.LC_ALL || process.env.LANGUAGE || "";
   if (env.toLowerCase().startsWith("ko")) return "ko";
-  // Check Windows locale
+  // Check Windows locale via Intl API
   if (process.platform === "win32") {
-    const winLang = process.env.USERLANGUAGE || process.env.SYSTEMLANGUAGE || "";
-    if (winLang.toLowerCase().includes("korean") || winLang.toLowerCase().startsWith("ko")) return "ko";
+    try {
+      const locale = Intl.DateTimeFormat().resolvedOptions().locale || "";
+      if (locale.toLowerCase().startsWith("ko")) return "ko";
+    } catch { /* fallback to en */ }
   }
   return "en";
 }

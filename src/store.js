@@ -90,7 +90,7 @@ async function api(path, options = {}) {
     }
     // Sanitize error: don't leak token or full response
     const body = await res.text();
-    const safe = body.slice(0, 200).replace(/gho_\w+|ghp_\w+|Bearer\s+\S+/gi, "***");
+    const safe = body.slice(0, 200).replace(/gho_\w+|ghp_\w+|github_pat_\w+|Bearer\s+\S+/gi, "***");
     throw new Error(`GitHub API ${res.status}: ${safe}`);
   }
   return res.json();

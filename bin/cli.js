@@ -8,10 +8,15 @@ import { abs, PROFILES } from "../src/profiles.js";
 import * as store from "../src/store.js";
 import { t, setLang, getLang } from "../src/i18n.js";
 
-const VERSION = "0.2.0";
+const VERSION = "0.2.1";
 const args = process.argv.slice(2);
-const cmd = args.find((a) => !a.startsWith("-"));
 const flags = new Set(args.filter((a) => a.startsWith("-")));
+// Handle version flags before cmd parsing
+if (flags.has("-v") || flags.has("--version")) {
+  console.log(`lcs v${VERSION}`);
+  process.exit(0);
+}
+const cmd = args.find((a) => !a.startsWith("-"));
 
 // Parse --lang flag
 const langFlag = args.find((a) => a.startsWith("--lang="));
@@ -20,7 +25,7 @@ else if (flags.has("--en")) setLang("en");
 else if (flags.has("--ko")) setLang("ko");
 
 // ─── Colors ───────────────────────────────────────────
-const useColor = process.stdout.isTTY !== false;
+const useColor = process.stdout.isTTY === true;
 const wrap = (code) => useColor ? (s) => `\x1b[${code}m${s}\x1b[0m` : (s) => s;
 const g = wrap("32");
 const r = wrap("31");
@@ -153,7 +158,7 @@ async function cmdSave() {
   ${d("https://gist.github.com/" + gistId)}
 
   ${d(t("fromOther"))}
-    ${c("npx llm-configsync init")}   ${t("saveHint").replace("저장", "입력").replace("save", "token")}
+    ${c("npx llm-configsync init")}   ${t("saveHint")}
     ${c("npx llm-configsync load")}   ${t("loadHint")}
 `);
   } catch (e) {
@@ -194,7 +199,7 @@ async function cmdLoad() {
       toolMap[pp.rel] = p.name;
       if (pp.dir) {
         for (const rel of Object.keys(bundle.files)) {
-          if (rel.startsWith(pp.rel.replace(/\/$/, ""))) toolMap[rel] = p.name;
+          if (rel === pp.rel || rel.startsWith(pp.rel + "/")) toolMap[rel] = p.name;
         }
       }
     }
@@ -275,7 +280,7 @@ function cmdStatus() {
   const info = store.getInfo();
   console.log(`  ${t("initialized")}  ${info.initialized ? g("✓") : r("✗")}`);
   if (info.username) console.log(`  ${t("account")}    ${info.username}`);
-  if (info.gistId) console.log(`  Gist:    ${d("https://gist.github.com/" + info.gistId)}`);
+  if (info.gistId) console.log(`  Gist:      ${d("https://gist.github.com/" + info.gistId)}`);
 
   const results = scan();
   const total = results.reduce((s, r) => s + r.files.length, 0);
@@ -385,7 +390,7 @@ switch (cmd) {
   case "list":    cmdList(); break;
   case "status":  cmdStatus(); break;
   case "link":    cmdLink(); break;
-  case "-v": case "--version": case "version": console.log(`lcs v${VERSION}`); break;
+  case "version": console.log(`lcs v${VERSION}`); break;
   case undefined: showHelp(); break;
   default:
     console.log(`\n  ${r("✗")} ${t("unknownCmd")} ${cmd}`);
