@@ -20,10 +20,17 @@ function redact(content) {
   return result;
 }
 
+const SKIP_PATTERNS = [/\.bak$/, /\.tmp$/, /\.log$/, /\.sqlite/, /\.pb$/];
+
+function shouldSkip(name) {
+  return SKIP_PATTERNS.some((p) => p.test(name));
+}
+
 function readDir(dirPath, baseRel, cat) {
   const out = [];
   if (!existsSync(dirPath)) return out;
   for (const entry of readdirSync(dirPath, { withFileTypes: true })) {
+    if (shouldSkip(entry.name)) continue;
     const full = join(dirPath, entry.name);
     const rel = join(baseRel, entry.name);
     if (entry.isDirectory()) {

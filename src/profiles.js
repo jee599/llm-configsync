@@ -14,6 +14,8 @@ export const PROFILES = [
       { rel: ".claude/hooks", desc: "Hooks", dir: true, cat: "hooks" },
       { rel: ".claude/skills", desc: "Skills (slash commands)", dir: true, cat: "skills" },
       { rel: ".claude/plugins/installed_plugins.json", desc: "Installed plugins list", cat: "settings" },
+      { rel: ".claude/plugins/known_marketplaces.json", desc: "Plugin marketplaces", cat: "settings" },
+      { rel: ".claude/plugins/blocklist.json", desc: "Blocked plugins", cat: "settings" },
       { rel: ".claude/teams", desc: "Team configs", dir: true, cat: "settings" },
     ],
   },
@@ -31,6 +33,7 @@ export const PROFILES = [
     id: "codex",
     paths: [
       { rel: ".codex/config.toml", desc: "Config", cat: "settings" },
+      { rel: ".codex/.codex-global-state.json", desc: "Global state", cat: "settings" },
       { rel: ".codex/rules", desc: "Rules", dir: true, cat: "instructions" },
     ],
   },
@@ -46,8 +49,9 @@ export const PROFILES = [
     name: "Continue",
     id: "continue",
     paths: [
-      { rel: ".continue/config.json", desc: "Config", cat: "settings" },
+      { rel: ".continue/.continuerc.json", desc: "Runtime config", cat: "settings" },
       { rel: ".continue/config.yaml", desc: "Config (YAML)", cat: "settings" },
+      { rel: ".continue/config.ts", desc: "Config (TypeScript)", cat: "settings" },
     ],
   },
   {

@@ -7,7 +7,7 @@ import { scan, collectFiles } from "../src/scanner.js";
 import { abs, PROFILES } from "../src/profiles.js";
 import * as store from "../src/store.js";
 
-const VERSION = "0.1.7";
+const VERSION = "0.1.8";
 const cmd = process.argv[2];
 const flags = new Set(process.argv.slice(3).filter((a) => a.startsWith("-")));
 
