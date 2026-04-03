@@ -16,6 +16,7 @@ export const PROFILES = [
       { rel: ".claude/plugins/installed_plugins.json", desc: "Installed plugins list", cat: "settings" },
       { rel: ".claude/plugins/known_marketplaces.json", desc: "Plugin marketplaces", cat: "settings" },
       { rel: ".claude/plugins/blocklist.json", desc: "Blocked plugins", cat: "settings" },
+      { rel: ".claude/plugins/data", desc: "Plugin user data", dir: true, cat: "settings" },
       { rel: ".claude/teams", desc: "Team configs", dir: true, cat: "settings" },
     ],
   },
