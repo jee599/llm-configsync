@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, chmodSync } from "node:fs";
 import { join, normalize, isAbsolute } from "node:path";
 import { homedir, platform } from "node:os";
+import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "node:crypto";
 
 const HOME = homedir();
 const IS_WIN = platform() === "win32";
@@ -168,19 +169,51 @@ async function findGist() {
   return null;
 }
 
+// ─── Encryption (AES-256-GCM) ───────────────────────
+// Key derived from token via scrypt — same token on another machine = same key
+
+function deriveKey(token) {
+  return scryptSync(token, "clisync-salt-v1", 32);
+}
+
+function encrypt(plaintext) {
+  const key = deriveKey(getToken());
+  const iv = randomBytes(12);
+  const cipher = createCipheriv("aes-256-gcm", key, iv);
+  const encrypted = Buffer.concat([cipher.update(plaintext, "utf-8"), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  // Format: base64(iv + tag + ciphertext)
+  return Buffer.concat([iv, tag, encrypted]).toString("base64");
+}
+
+function decrypt(encoded) {
+  const key = deriveKey(getToken());
+  const buf = Buffer.from(encoded, "base64");
+  const iv = buf.subarray(0, 12);
+  const tag = buf.subarray(12, 28);
+  const ciphertext = buf.subarray(28);
+  const decipher = createDecipheriv("aes-256-gcm", key, iv);
+  decipher.setAuthTag(tag);
+  return decipher.update(ciphertext, undefined, "utf-8") + decipher.final("utf-8");
+}
+
 // ─── Push (save to Gist) ─────────────────────────────
 
 export async function push(filesMap) {
   const bundle = {
-    version: 1,
+    version: 2,
+    encrypted: true,
     updated_at: new Date().toISOString(),
     machine: `${process.platform}-${process.arch}`,
     file_count: Object.keys(filesMap).length,
     files: filesMap,
   };
 
-  const content = JSON.stringify(bundle, null, 2);
-  const contentSize = Buffer.byteLength(content, "utf-8");
+  const plaintext = JSON.stringify(bundle, null, 2);
+  const encrypted = encrypt(plaintext);
+  const wrapper = JSON.stringify({ encrypted: true, version: 2, data: encrypted });
+
+  const contentSize = Buffer.byteLength(wrapper, "utf-8");
   if (contentSize > MAX_GIST_SIZE) {
     throw new Error(`Bundle too large (${(contentSize / 1024 / 1024).toFixed(1)}MB). GitHub Gist limit is ~10MB.`);
   }
@@ -188,7 +221,7 @@ export async function push(filesMap) {
   const payload = {
     description: GIST_DESC,
     public: false,
-    files: { "clisync.json": { content } },
+    files: { "clisync.json": { content: wrapper } },
   };
 
   const existing = await findGist();
@@ -239,8 +272,8 @@ export async function pull() {
 
   const file = gist.files[fileName];
 
-  let content = file.content;
-  if (!content && file.raw_url) {
+  let raw = file.truncated ? null : file.content;
+  if (!raw && file.raw_url) {
     const res = await fetch(file.raw_url, {
       headers: {
         Authorization: `Bearer ${getToken()}`,
@@ -248,10 +281,21 @@ export async function pull() {
       },
     });
     if (!res.ok) throw new Error("Failed to fetch gist content");
-    content = await res.text();
+    raw = await res.text();
   }
 
-  if (!content) throw new Error("Gist file is empty");
+  if (!raw) throw new Error("Gist file is empty");
 
-  return validateBundle(JSON.parse(content));
+  const parsed = JSON.parse(raw);
+
+  // Handle encrypted (v2) and unencrypted (v1) bundles
+  let bundle;
+  if (parsed.encrypted && parsed.data) {
+    const decrypted = decrypt(parsed.data);
+    bundle = JSON.parse(decrypted);
+  } else {
+    bundle = parsed; // v1 unencrypted format
+  }
+
+  return validateBundle(bundle);
 }

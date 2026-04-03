@@ -125,7 +125,8 @@ General dotfile managers work, but they don't know which files your LLM tools us
 - **Sensitive files auto-skipped** — `auth.json`, `credentials.json`, `.env`, `.pem`, `.key` are never uploaded
 - **Confirmation prompt** — `clisync load` asks before overwriting (skip with `--force`)
 - **Backups** — existing files saved as `.bak` before overwriting
-- **Private Gist** — only you can see it
+- **AES-256-GCM encrypted** — Gist content is encrypted with a key derived from your token. Even with the URL, no one can read it without your token
+- **Private Gist** — unlisted, not indexed by search
 - **Token security** — hidden input on entry, file permissions 0600 (Unix)
 - **Path traversal protection** — validates all paths on restore
 - **Cross-platform** — macOS, Linux, Windows with consistent forward-slash path handling

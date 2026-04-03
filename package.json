@@ -1,6 +1,6 @@
 {
   "name": "clisync",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "description": "Sync Claude Code, Gemini CLI, Codex, Aider settings across machines via GitHub Gist. One command save, one command load. Zero dependencies.",
   "keywords": ["llm", "cli", "sync", "config", "backup", "restore", "claude-code", "gemini-cli", "codex", "aider", "continue", "copilot", "mcp", "dotfiles", "migrate"],
   "license": "MIT",

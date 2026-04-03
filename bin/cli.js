@@ -8,7 +8,7 @@ import { abs, PROFILES } from "../src/profiles.js";
 import * as store from "../src/store.js";
 import { t, setLang } from "../src/i18n.js";
 
-const VERSION = "0.3.0";
+const VERSION = "0.5.0";
 const CMD = "clisync";
 const args = process.argv.slice(2);
 const flags = new Set(args.filter((a) => a.startsWith("-")));
